@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+PERL="/usr/bin/perl"
+
+FASTA="dataraw/waspass.fasta"
+GFF="dataraw/waspass.all.vvul.gff"
+
+# prepare refseqs
+"${PERL}" bin/prepare-refseqs.pl \
+    --fasta "${FASTA}" \
+    --out "data"
+
+# load MAKER gff
+"${PERL}" bin/flatfile-to-json.pl \
+    --gff "${GFF}" \
+    --arrowheadClass trellis-arrowhead \
+    --subfeatureClasses '{"CDS":"green",
+                          "contig":"grey",
+                          "exon":"lightblue",
+                          "gene":"blue",
+                          "match":"grey",
+                          "match_part":"grey",
+                          "mRNA":"lightblue",
+                          "five_prime_UTR":"darkgreen",
+                          "three_prime_UTR":"darkgreen"}' \
+    --type mRNA \
+    --trackLabel maker \
+    --out "data"
+
+# generate index
+"${PERL}" bin/generate-names.pl \
+    --verbose \
+    --out "data"
+
+exit 0
