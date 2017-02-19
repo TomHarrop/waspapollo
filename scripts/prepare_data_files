@@ -6,11 +6,13 @@ FASTA="dataraw/waspass.fasta"
 GFF="dataraw/waspass.all.vvul.gff"
 
 # prepare refseqs
+printf "[ %s: Running prepare-refseqs.pl ]\n" "$(date)"
 "${PERL}" bin/prepare-refseqs.pl \
     --fasta "${FASTA}" \
     --out "data"
 
 # load MAKER gff
+printf "[ %s: Running flatfile-to-json.pl ]\n" "$(date)"
 "${PERL}" bin/flatfile-to-json.pl \
     --gff "${GFF}" \
     --arrowheadClass trellis-arrowhead \
@@ -28,6 +30,7 @@ GFF="dataraw/waspass.all.vvul.gff"
     --out "data"
 
 # generate index
+printf "[ %s: Running generate-names.pl ]\n" "$(date)"
 "${PERL}" bin/generate-names.pl \
     --verbose \
     --out "data"
