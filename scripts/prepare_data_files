@@ -40,4 +40,10 @@ printf "[ %s: Running generate-names.pl ]\n" "$(date)"
     --verbose \
     --out "${outdir}"
 
+# make a blat database... doesn't seem to do anything
+/usr/local/bin/faToTwoBit "${FASTA}" "${outdir}/vv.2bit"
+
+# make the whole outdir rwx-able, so that tomcat can read it
+chmod -R a=rwx "${outdir}"
+
 exit 0
