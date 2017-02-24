@@ -2,14 +2,19 @@
 
 PERL="/usr/bin/perl"
 
-FASTA="dataraw/waspass.fasta"
+FASTA="dataraw/scaffolds_sorted.fasta"
 GFF="dataraw/waspass.all.vvul.gff"
+
+outdir="data/sorted"
+if [[ ! -e "${outdir}" ]]; then
+  mkdir -p "${outdir}"
+fi
 
 # prepare refseqs
 printf "[ %s: Running prepare-refseqs.pl ]\n" "$(date)"
 "${PERL}" bin/prepare-refseqs.pl \
     --fasta "${FASTA}" \
-    --out "data"
+    --out "${outdir}"
 
 # load MAKER gff
 printf "[ %s: Running flatfile-to-json.pl ]\n" "$(date)"
@@ -27,12 +32,12 @@ printf "[ %s: Running flatfile-to-json.pl ]\n" "$(date)"
                           "three_prime_UTR":"darkgreen"}' \
     --type mRNA \
     --trackLabel maker \
-    --out "data"
+    --out "${outdir}"
 
 # generate index
 printf "[ %s: Running generate-names.pl ]\n" "$(date)"
 "${PERL}" bin/generate-names.pl \
     --verbose \
-    --out "data"
+    --out "${outdir}"
 
 exit 0
