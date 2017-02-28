@@ -2,12 +2,17 @@
 
 PERL="/usr/bin/perl"
 
-FASTA="dataraw/scaffolds_sorted.fasta"
+FASTA="dataraw/waspass.fasta" 
 GFF="dataraw/waspass.all.vvul.gff"
 
-outdir="data/sorted"
+outdir="data"
 if [[ ! -e "${outdir}" ]]; then
   mkdir -p "${outdir}"
+fi
+
+blatdir="blat"
+if [[ ! -e "${blatdir}" ]]; then
+  mkdir -p "${blatdir}"
 fi
 
 # prepare refseqs
@@ -41,9 +46,10 @@ printf "[ %s: Running generate-names.pl ]\n" "$(date)"
     --out "${outdir}"
 
 # make a blat database... doesn't seem to do anything
-/usr/local/bin/faToTwoBit "${FASTA}" "${outdir}/vv.2bit"
+/usr/local/bin/faToTwoBit "${FASTA}" "${blatdir}/vv.2bit"
 
 # make the whole outdir rwx-able, so that tomcat can read it
 chmod -R a=rwx "${outdir}"
+chmod -R a=rwx "${blatdir}"
 
 exit 0
