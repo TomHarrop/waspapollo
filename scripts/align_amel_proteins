@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+FASTA="dataraw/scaffolds_sorted.fasta"
+QUERY="dataraw/amel_OGSv3.2_pep.fa"
+DB="amel_protein_blast/scaffolds_sorted"
+HITS="amel_protein_blast/blast.hit"
+COMP="amel_protein_blast/comp"
+
+# make blast db
+makeblastdb -dbtype nucl -in "${FASTA}" \
+    -out "${DB}"
+
+# run blast query
+tblastn -query "${QUERY}" \
+    -db "${DB}" \
+    -outfmt 6 | \
+    sort -k 2,2 -k 1,1 > "${HITS}"
+
+# run prosplign compartment tool to find approximate locations of the protein
+# instances
+cat "${HITS}" | bin/prosplign/procompart -t > "${COMP}"
+
+# Run ProSplign with the compartment file and the fasta files
+bin/prosplign -i "${COMP}" -fasta "${FASTA,QUERY}" -nogenbank \
+    -o amel_protein_blast/pro.asn \
+    -eo amel_protein_blast/pro.txt
+
+nohup exonerate --model protein2genome --percent 50 \
+    dataraw/amel_OGSv3.2_pep.fa \
+    dataraw/scaffolds_sorted.fasta \
+    > amel_protein_blast/exonerate.txt &
+
