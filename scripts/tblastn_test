@@ -17,4 +17,4 @@ tblastn -query "${QUERY}" \
     -evalue 1e-6 \
     -out "${HITS}" \
     -outfmt 5 \
-    -num_threads = "${num_cpus}" \
+    -num_threads "${num_cpus}" \
