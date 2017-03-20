@@ -5,6 +5,9 @@ QUERY="dataraw/amel_OGSv3.2_pep.fa"
 DB="amel_protein_blast/scaffolds_sorted"
 HITS="amel_protein_blast/blast.hit"
 COMP="amel_protein_blast/comp"
+num_cpus=20
+
+exonerate="bin/exonerate/exonerate"
 
 # make blast db
 makeblastdb -dbtype nucl -in "${FASTA}" \
@@ -25,8 +28,25 @@ bin/prosplign -i "${COMP}" -fasta "${FASTA,QUERY}" -nogenbank \
     -o amel_protein_blast/pro.asn \
     -eo amel_protein_blast/pro.txt
 
-nohup exonerate --model protein2genome --percent 50 \
-    dataraw/amel_OGSv3.2_pep.fa \
-    dataraw/scaffolds_sorted.fasta \
-    > amel_protein_blast/exonerate.txt &
+# try exonerate on amel peptide sequences
+for i in $(seq 1 "${num_cpus}"); do
+    nohup bash -c "${exonerate} --model protein2genome --percent 50 \
+        ${QUERY} \
+        ${FASTA} \
+        --querychunkid ${i} --querychunktotal ${num_cpus} \
+        --showvulgar no --showalignment no --showtargetgff yes \
+        1> amel_protein_blast/exonerate_${i}.err \
+        2> amel_protein_blast/exonerate_amel_${i}.gff" &
+done
+
+# fix nasty exonerate gff
+exonerate_gff_to_alignment_gff3.pl dataraw/test_exonerate.txt prot > dataraw/test_exonerate.gff3
+
+
+
+
+
+
+
+
 

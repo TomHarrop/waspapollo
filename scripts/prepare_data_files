@@ -39,6 +39,19 @@ printf "[ %s: Running flatfile-to-json.pl ]\n" "$(date)"
     --trackLabel maker \
     --out "${outdir}"
 
+# load exonerate GFF
+"${PERL}" bin/apollo/flatfile-to-json.pl \
+    --gff dataraw/test_exonerate.gff \
+    # --arrowheadClass trellis-arrowhead \
+    # --subfeatureClasses '{"gene":"blue",
+    #                       "cds":"green",
+    #                       "exon":"lightblue",
+    #                       "similarity":"grey"}' \
+    # --type gene,cds,exon,similarity \
+    --type nucleotide_to_protein_match \
+    --trackLabel "Amel_4.5_proteins_exonerate" \
+    --out "${outdir}"
+
 # generate index
 printf "[ %s: Running generate-names.pl ]\n" "$(date)"
 "${PERL}" bin/apollo/generate-names.pl \
