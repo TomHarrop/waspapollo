@@ -3,7 +3,7 @@
 FASTA="dataraw/scaffolds_sorted.fasta"
 QUERY="dataraw/amel_OGSv3.2_pep.fa"
 DB="tblastn_test/scaffolds_sorted"
-HITS="amel_protein_blast/amel_OGSv3.2_pep_hits.xml"
+HITS="tblastn_test/amel_OGSv3.2_pep_hits.xml"
 
 num_cpus=20
 
