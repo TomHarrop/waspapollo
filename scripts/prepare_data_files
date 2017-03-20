@@ -39,12 +39,18 @@ printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
     --trackLabel maker \
     --out "${outdir}"
 
-# load tblastn GFF
+# load tblastn GFFs
 printf "[ %s: Running flatfile-to-json.pl on tblastn results ]\n" "$(date)"
 "${PERL}" bin/apollo/flatfile-to-json.pl \
     --gff tblastn/amel_pep/amel_OGSv3.2_pep_hits.gff3 \
     --type match,similarity \
     --trackLabel "amel_OGSv3.2_pep_tblastn" \
+    --out "${outdir}"
+
+"${PERL}" bin/apollo/flatfile-to-json.pl \
+    --gff tblastn/pdom_protein/Pdom_r1.2_protein_hits.gff3 \
+    --type match,similarity \
+    --trackLabel "Pdom_r1.2_protein_tblastn" \
     --out "${outdir}"
 
 # generate index

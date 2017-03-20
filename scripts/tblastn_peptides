@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+FASTA="dataraw/scaffolds_sorted.fasta"
+DB="tblastn/db/scaffolds_sorted"
+
+AMEL_QUERY="dataraw/amel_OGSv3.2_pep.fa"
+AMEL_HITS="tblastn/amel_pep/amel_OGSv3.2_pep_hits.blast"
+AMEL_GFF="tblastn/amel_pep/amel_OGSv3.2_pep_hits.gff3"
+
+PDOM_QUERY="dataraw/GCF_001465965.1_Pdom_r1.2_protein.faa"
+PDOM_HITS="tblastn/pdom_protein/Pdom_r1.2_protein_hits.blast"
+PDOM_GFF="tblastn/pdom_protein/Pdom_r1.2_protein_hits.gff3"
+
+num_cpus=20
+
+# make blast db
+makeblastdb -dbtype nucl -in "${FASTA}" \
+    -out "${DB}"
+
+# run blast queries
+tblastn -query "${AMEL_QUERY}" \
+    -db "${DB}" \
+    -evalue 1e-6 \
+    -out "${AMEL_HITS}" \
+    -num_threads "${num_cpus}" &
+
+tblastn -query "${PDOM_QUERY}" \
+    -db "${DB}" \
+    -evalue 1e-6 \
+    -out "${PDOM_HITS}" \
+    -num_threads "${num_cpus}" &
+
+wait
+
+# convert results to gff
+bp_search2gff.pl -i "${AMEL_HITS}" \
+    -o "${AMEL_GFF}" \
+    -f blast \
+    --type hit \
+    --source tblastn \
+    --target \
+    --version 3 \
+    --match \
+    --addid \
+    --cutoff 1e-6 &
+
+bp_search2gff.pl -i "${PDOM_HITS}" \
+    -o "${PDOM_GFF}" \
+    -f blast \
+    --type hit \
+    --source tblastn \
+    --target \
+    --version 3 \
+    --match \
+    --addid \
+    --cutoff 1e-6 &
+
+wait
