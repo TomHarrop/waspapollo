@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
 FASTA="dataraw/scaffolds_sorted.fasta"
-QUERY="dataraw/amel_OGSv3.2_pep.fa"
+QUERY="tblastn_test/amel_OGSv3.2_pep_test.fa"
 DB="tblastn_test/scaffolds_sorted"
 HITS="tblastn_test/amel_OGSv3.2_pep_hits.xml"
+OUTGFF="tblastn_test/amel_OGSv3.2_pep_hits.gff3"
 
 num_cpus=20
 
@@ -16,5 +17,18 @@ tblastn -query "${QUERY}" \
     -db "${DB}" \
     -evalue 1e-6 \
     -out "${HITS}" \
-    -outfmt 5 \
+#    -outfmt 5 \
     -num_threads "${num_cpus}" \
+
+# convert to gff
+bp_search2gff.pl -i "${HITS}" \
+    -o "${OUTGFF}" \
+    -f blast \
+    --type hit \
+    --source tblastn \
+    --target \
+    --version 3 \
+    --match \
+    --addid \
+    --cutoff 1e-6
+
