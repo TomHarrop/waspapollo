@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+outdir="rnaseq/pass1"
+if [[ ! -d "${outdir}" ]]; then
+    mkdir -p "${outdir}"
+fi
+
+read_folder="dataraw/NZGL01162"
+
+# loop over sample_ids in csv file
+while IFS="," read -r sample r1 r2
+do
+    r1_file="${read_folder}/${r1}"
+    r2_file="${read_folder}/${r2}"
+    printf "sample:\t%s\nr1:\t%s\nr2:\t%s\n" \
+        "${sample}" "${r1_file}" "${r2_file}"
+    
+
+
+done < dataraw/rnaseq_sample_ids.csv
