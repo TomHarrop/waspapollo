@@ -22,7 +22,7 @@ do
 
     # set up STAR job
     cmd=( bin/STAR
-              --runThreadN 8
+              --runThreadN 10
               --genomeDir "${index}"
               --readFilesIn "${r1_file}" "${r2_file}" 
               --readFilesCommand zcat
@@ -34,7 +34,7 @@ do
     shopt -u extglob
 
     # run STAR
-    "${cmd[@]}" &> "${log_file}" &
+    "${cmd[@]}" &> "${log_file}"
 
     # log metadata
     cat <<- _EOF_ > "${metadata_file}"

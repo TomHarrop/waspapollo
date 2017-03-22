@@ -12,7 +12,7 @@ index="rnaseq/index"
 splice_junction_files=()
 while IFS="" read -r -d $'\0'; do
     splice_junction_files+=("$REPLY")
-done < <(find "rnaseq/pass2" \
+done < <(find "rnaseq/pass1" \
          -name "*SJ.out.tab" -print0)
 
 # loop over sample_ids in csv file
@@ -29,7 +29,7 @@ do
 
     # set up STAR job
     cmd=( bin/STAR
-              --runThreadN 8
+              --runThreadN 10
               --genomeDir "${index}"
               --readFilesIn "${r1_file}" "${r2_file}" 
               --readFilesCommand zcat
