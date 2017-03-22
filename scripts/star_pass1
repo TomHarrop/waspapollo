@@ -25,6 +25,7 @@ do
               --runThreadN 8
               --genomeDir "${index}"
               --readFilesIn "${r1_file}" "${r2_file}" 
+              --readFilesCommand zcat
               --outFileNamePrefix "${outdir}/${sample}."
               --outSAMtype None )
     printf "Final command line: "
@@ -46,4 +47,4 @@ done < dataraw/rnaseq_sample_ids.csv
 
 wait
 
-exit 0r
+exit 0
