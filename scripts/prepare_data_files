@@ -25,16 +25,6 @@ printf "[ %s: Running prepare-refseqs.pl ]\n" "$(date)"
 printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
 "${PERL}" bin/apollo/flatfile-to-json.pl \
     --gff "${GFF}" \
-    # --arrowheadClass trellis-arrowhead \
-    # --subfeatureClasses '{"CDS":"green",
-    #                       "contig":"grey",
-    #                       "exon":"lightblue",
-    #                       "gene":"blue",
-    #                       "match":"grey",
-    #                       "match_part":"grey",
-    #                       "mRNA":"lightblue",
-    #                       "five_prime_UTR":"darkgreen",
-    #                       "three_prime_UTR":"darkgreen"}' \
     --type mRNA \
     --trackLabel maker \
     --out "${outdir}"

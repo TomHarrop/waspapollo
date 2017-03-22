@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+outdir="rnaseq/index"
+if [[ ! -d "${outdir}" ]]; then
+    mkdir -p "${outdir}"
+fi
+
+FASTA="dataraw/scaffolds_sorted.fasta" 
+GFF="dataraw/waspass.all.vvul.gff"
+
+cmd=( bin/STAR 
+          --runThreadN 8
+          --runMode genomeGenerate
+          --genomeDir "${outdir}"
+          --genomeFastaFiles "${FASTA}"
+          --sjdbGTFfile "${GFF}"
+          --sjdbGTFtagExonParentTranscript Parent
+          --sjdbOverhang 99 )
+
+shopt -s extglob
+printf "Final command line: "
+printf "%s " "${cmd[@]//+([[:blank:]])/ }"
+printf "\n"
+shopt -u extglob
+
+"${cmd[@]}"
+
+metadata_file="${outdir}/METADATA.csv"
+cat <<- _EOF_ > "${metadata_file}"
+    Script,${0}
+    branch,$(git rev-parse --abbrev-ref HEAD)
+    hash,$(git rev-parse HEAD)
+    date,$(date +%F)
+    STAR version,$(bin/STAR --version)
+_EOF_
