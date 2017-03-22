@@ -8,7 +8,6 @@ fi
 read_folder="dataraw/NZGL01162"
 index="rnaseq/index"
 
-
 # loop over sample_ids in csv file
 while IFS="," read -r sample r1 r2
 do
@@ -47,4 +46,4 @@ done < dataraw/rnaseq_sample_ids.csv
 
 wait
 
-exit 0
+exit 0r

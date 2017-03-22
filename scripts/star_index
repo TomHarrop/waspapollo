@@ -4,6 +4,7 @@ outdir="rnaseq/index"
 if [[ ! -d "${outdir}" ]]; then
     mkdir -p "${outdir}"
 fi
+log_file="${outdir}/index_log.txt"
 
 FASTA="dataraw/scaffolds_sorted.fasta" 
 GFF="dataraw/waspass.all.vvul.gff"
@@ -15,6 +16,7 @@ cmd=( bin/STAR
           --genomeFastaFiles "${FASTA}"
           --sjdbGTFfile "${GFF}"
           --sjdbGTFtagExonParentTranscript Parent
+          --sjdbGTFtagExonParentGene Parent
           --sjdbOverhang 99 )
 
 shopt -s extglob
@@ -23,7 +25,8 @@ printf "%s " "${cmd[@]//+([[:blank:]])/ }"
 printf "\n"
 shopt -u extglob
 
-"${cmd[@]}"
+"${cmd[@]}" &> "${log_file}" &
+wait
 
 metadata_file="${outdir}/METADATA.csv"
 cat <<- _EOF_ > "${metadata_file}"
