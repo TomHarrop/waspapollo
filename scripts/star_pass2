@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+outdir="rnaseq/pass2"
+if [[ ! -d "${outdir}" ]]; then
+    mkdir -p "${outdir}"
+fi
+
+read_folder="dataraw/NZGL01162"
+index="rnaseq/index"
+
+# find the SJ files
+splice_junction_files=()
+while IFS="" read -r -d $'\0'; do
+    splice_junction_files+=("$REPLY")
+done < <(find "rnaseq/pass2" \
+         -name "*SJ.out.tab" -print0)
+
+# loop over sample_ids in csv file
+while IFS="," read -r sample r1 r2
+do
+    r1_file="${read_folder}/${r1}"
+    r2_file="${read_folder}/${r2}"
+    printf "sample:\t%s\nr1:\t%s\nr2:\t%s\n" \
+        "${sample}" "${r1_file}" "${r2_file}"
+
+    # set up log files
+    log_file="${outdir}/${sample}_log.txt"
+    metadata_file="${outdir}/${sample}_METADATA.csv"
+
+    # set up STAR job
+    cmd=( bin/STAR
+              --runThreadN 8
+              --genomeDir "${index}"
+              --readFilesIn "${r1_file}" "${r2_file}" 
+              --readFilesCommand zcat
+              --outFileNamePrefix "${outdir}/${sample}."
+              --outSAMtype BAM SortedByCoordinate
+              --quantMode GeneCounts 
+              --sjdbFileChrStartEnd "${splice_junction_files[@]}")
+    printf "Final command line: "
+    printf "%s " "${cmd[@]//+([[:blank:]])/ }"
+    printf "\n"
+    shopt -u extglob
+
+done < dataraw/rnaseq_sample_ids.csv
