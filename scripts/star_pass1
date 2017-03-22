@@ -6,6 +6,8 @@ if [[ ! -d "${outdir}" ]]; then
 fi
 
 read_folder="dataraw/NZGL01162"
+index="rnaseq/index"
+
 
 # loop over sample_ids in csv file
 while IFS="," read -r sample r1 r2
@@ -14,7 +16,35 @@ do
     r2_file="${read_folder}/${r2}"
     printf "sample:\t%s\nr1:\t%s\nr2:\t%s\n" \
         "${sample}" "${r1_file}" "${r2_file}"
-    
 
+    # set up log files
+    log_file="${outdir}/${sample}_log.txt"
+    metadata_file="${outdir}/${sample}_METADATA.csv"
+
+    # set up STAR job
+    cmd=( bin/STAR
+              --runThreadN 8
+              --genomeDir "${index}"
+              --readFilesIn "${r1_file}" "${r2_file}" 
+              --outFileNamePrefix "${outdir}/${sample}."
+              --outSAMtype None )
+    printf "Final command line: "
+    printf "%s " "${cmd[@]//+([[:blank:]])/ }"
+    printf "\n"
+    shopt -u extglob
+
+    # run STAR
+    "${cmd[@]}" &> "${log_file}" &
+
+    # log metadata
+    cat <<- _EOF_ > "${metadata_file}"
+        Script,${0}
+        date,$(date +%F)
+        STAR version,$(bin/STAR --version)
+_EOF_
 
 done < dataraw/rnaseq_sample_ids.csv
+
+wait
+
+exit 0
