@@ -29,7 +29,7 @@ do
 
     # set up STAR job
     cmd=( bin/STAR
-              --runThreadN 10
+              --runThreadN 15
               --genomeDir "${index}"
               --readFilesIn "${r1_file}" "${r2_file}" 
               --readFilesCommand zcat
@@ -42,4 +42,18 @@ do
     printf "\n"
     shopt -u extglob
 
+    # run STAR
+    "${cmd[@]}" &> "${log_file}"
+
+    # log metadata
+    cat <<- _EOF_ > "${metadata_file}"
+        Script,${0}
+        date,$(date +%F)
+        STAR version,$(bin/STAR --version)
+_EOF_
+
 done < dataraw/rnaseq_sample_ids.csv
+
+wait
+
+exit 0
