@@ -1,0 +1,9 @@
+ /* color for plus matches */
+.plus-cigarM {
+        background-color: #EC8B8B;
+}
+
+/* color for minus matches */
+.minus-cigarM {
+        background-color: #8F8FD8; 
+}
