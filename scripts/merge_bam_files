@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+bam_folder="rnaseq/pass2"
+outdir="rnaseq/merged"
+
+# read group properties
+ID="C7GKRANXX.1"
+PL="illumina"
+pu="C7GKRANXX.1" # add sample name to this
+# add sm, lb in loop
+
+# find the BAM files
+bam_files=()
+while IFS="" read -r -d $'\0'; do
+    bam_files+=("$REPLY")
+done < <(find "${bam_folder}/" \
+         -name "*.Aligned.sortedByCoord.out.bam" -print0)
+
+# loop over the bamfiles
+for bf in "${bam_files[@]}"; do
+    sample_name=$(basename ${bf} ".Aligned.sortedByCoord.out.bam" )
+    cmd=( picard-tools AddOrReplaceReadGroups
+              "I=${bf}"
+              "O=${outdir}/${sample_name}.bam"
+              "RGID=${ID}"
+              "RGLB=${sample_name}"
+              "RGPL=${PL}"
+              "RGPU=${pu}.${sample_name}"
+              "RGSM=${sample_name}" )
+
+    shopt -s extglob
+    printf "Final command line: "
+    printf "%s " "${cmd[@]//+([[:blank:]])/ }"
+    printf "\n"
+    shopt -u extglob
+
+    "${cmd[@]}" &
+done
+
+wait
+
+# group files by sample type
+bam_files_with_rg=()
+while IFS="" read -r -d $'\0'; do
+    bam_files_with_rg+=("$REPLY")
+done < <(find "rnaseq/merged/" \
+         -name "*.bam" -print0)
+
+worker_files=()
+larva_files=()
+queen_files=()
+
+for bf in "${bam_files_with_rg[@]}"; do
+    bn=$(basename "${bf}" .bam)
+    if grep -q "Worker" <<< "${bn}"; then
+        worker_files+=("${bf}")
+    elif grep -q "Queen" <<< "${bn}"; then
+        queen_files+=("${bf}")
+    elif grep -q "Larvae" <<< "${bn}"; then
+        larva_files+=("${bf}")
+    fi
+done
+
+printf "worker_files: %s\n" "${worker_files[@]}"
+printf " larva_files: %s\n" "${larva_files[@]}"
+printf " queen_files: %s\n" "${queen_files[@]}"
+
+# merge files per sample type
+picard-tools MergeSamFiles \
+    $(printf "I=%s " "${worker_files[@]}") \
+    "O=${outdir}/worker_merged.bam" \
+    ASSUME_SORTED=true \
+    USE_THREADING=true & 
+picard-tools MergeSamFiles \
+    $(printf "I=%s " "${larva_files[@]}") \
+    "O=${outdir}/larva_merged.bam" \
+    ASSUME_SORTED=true \
+    USE_THREADING=true &
+picard-tools MergeSamFiles \
+    $(printf "I=%s " "${queen_files[@]}") \
+    "O=${outdir}/queen_merged.bam" \
+    ASSUME_SORTED=true \
+    USE_THREADING=true &
+
+wait
