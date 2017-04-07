@@ -44,7 +44,7 @@ wait
 
 # re-pair reads
 printf "[ %s: Repairing reads ]\n" "$(date)"
-bin/bbmap/repair.sh -Xmx50g \
+bin/bbmap/repair.sh \
     in="${r1_joined}" \
     in2="${r2_joined}" \
     out="${repaired_reads}"
