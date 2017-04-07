@@ -21,13 +21,16 @@ do
     r1_file="${read_folder}/${r1}"
     r2_file="${read_folder}/${r2}"
     repaired_reads="${tmp_dir}/${sample}.fastq.gz"
-
     cmd=( bin/bbmap/repair.sh
               in="${r1_file}"
               in2="${r2_file}"
               out="${repaired_reads}"
               repair )
 
+    printf "[ %s: Repairing ]\n" "$(date)"
+    printf "r1_file:\t\t%s\n" "${r1_file}"
+    printf "r2_file:\t\t%s\n" "${r2_file}"
+    printf "repaired_reads:\t%s\n" "${repaired_reads}"
     "${cmd[@]}" &
 done < dataraw/rnaseq_sample_ids.csv
 wait
@@ -40,10 +43,13 @@ done < <(find "${tmp_dir}/" \
          -name "*.fastq.gz" -print0)
 
 # join reads
+printf "[ %s: Merging ]\n" "$(date)"
+printf "%s\n" "${repaired_files[@]}"
 merged_reads="${tmp_dir}/merged.fastq.gz"
 cat "${repaired_files[@]}" > "${merged_reads}"
 
 # map reads
+printf "[ %s: Aligning ]\n" "$(date)"
 aligned_sam="${tmp_dir}/aln.sam"
 aligned_bam="${outdir}/aln.bam"
 bwa mem -t 15 -p \
@@ -52,11 +58,13 @@ bwa mem -t 15 -p \
     > "${aligned_sam}"
 
 # sort the samfile to BAM
+printf "[ %s: Sorting BAMfile ]\n" "$(date)"
 samtools sort \
     -I 9 \
     -o "${aligned_bam}" \
     -@ 15
 
+printf "[ %s: Indexing BAMfile ]\n" "$(date)"
 samtools index "${aligned_bam}"
 
 exit 0
