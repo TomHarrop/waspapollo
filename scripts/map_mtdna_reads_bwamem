@@ -16,7 +16,7 @@ fi
 printf "[ %s: Using tmpdir %s ]\n" "$(date)" "${tmp_dir}"
 
 # make bwamem index
-bwa index "${FASTA}" &
+# bwa index "${FASTA}" &
 
 # loop over sample_ids in csv file and interleave
 while IFS="," read -r sample r1 r2
@@ -34,7 +34,7 @@ do
     printf "r1_file:\t%s\n" "${r1_file}"
     printf "r2_file:\t%s\n" "${r2_file}"
     printf "repaired_reads:\t%s\n" "${repaired_reads}"
-    "${cmd[@]}"
+    # "${cmd[@]}"
 done < dataraw/rnaseq_sample_ids.csv
 
 # find interleaved read files
@@ -48,11 +48,10 @@ done < <(find "${tmp_dir}/" \
 printf "[ %s: Merging ]\n" "$(date)"
 printf "%s\n" "${repaired_files[@]}"
 merged_reads="${tmp_dir}/merged.fastq.gz"
-cat "${repaired_files[@]}" > "${merged_reads}"
+# cat "${repaired_files[@]}" > "${merged_reads}"
 
 # map reads and output BAM
 printf "[ %s: Aligning ]\n" "$(date)"
-#aligned_sam="${tmp_dir}/aln.sam"
 aligned_bam="${tmp_dir}/aln.bam"
 sorted_bam="${outdir}/sorted.bam"
 bwa mem -t 15 -p \
