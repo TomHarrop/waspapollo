@@ -9,7 +9,10 @@ outdir="rnaseq/vvmtdna"
 if [[ ! -e "${outdir}" ]]; then
   mkdir -p "${outdir}"
 fi
-tmp_dir="$(mktemp -d --tmpdir "repair.XXXXXX")"
+tmp_dir="rnaseq/tmp"
+if [[ ! -e "${tmp_dir}" ]]; then
+  mkdir -p "${tmp_dir}"
+fi
 printf "[ %s: Using tmpdir %s ]\n" "$(date)" "${tmp_dir}"
 
 # make bwamem index
@@ -58,10 +61,12 @@ bwa mem -t 15 -p \
 
 # sort the samfile to BAM
 printf "[ %s: Sorting BAMfile ]\n" "$(date)"
-samtools sort \
-    -I 9 \
-    -o "${aligned_bam}" \
-    -@ 15
+
+samtools view -F 2312 -uT "${FASTA}" "${aligned_sam}" | \
+    samtools sort \
+        -l 9 \
+        -o "${aligned_bam}" \
+        -@ 15
 
 printf "[ %s: Indexing BAMfile ]\n" "$(date)"
 samtools index "${aligned_bam}"
