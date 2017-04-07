@@ -3,58 +3,52 @@ set -eu
 
 FASTA="dataraw/vvmtdna/Vvul-mtDNA.fasta"
 
+# make temporary output folder
 read_folder="dataraw/NZGL01162"
 outdir="rnaseq/vvmtdna"
 if [[ ! -e "${outdir}" ]]; then
   mkdir -p "${outdir}"
 fi
+tmp_dir="$(mktemp -d --tmpdir "repair.XXXXXX")"
+printf "[ %s: Using tmpdir %s ]\n" "$(date)" "${tmp_dir}"
 
 # make bwamem index
 bwa index "${FASTA}" &
 
-# find read files
-fwd_files=()
-rev_files=()
-while IFS="" read -r -d $'\0'; do
-    fwd_files+=("$REPLY")
-done < <(find "${read_folder}/" \
-         -name "*R1.fastq.gz" -print0)
-while IFS="" read -r -d $'\0'; do
-    rev_files+=("$REPLY")
-done < <(find "${read_folder}/" \
-         -name "*R2.fastq.gz" -print0)
+# loop over sample_ids in csv file and interleave
+while IFS="," read -r sample r1 r2
+do
+    r1_file="${read_folder}/${r1}"
+    r2_file="${read_folder}/${r2}"
+    repaired_reads="${tmp_dir}/${sample}.fastq.gz"
 
-printf "fwd_files\n"
-printf "%s\n" "${fwd_files[@]}"
-printf "rev_files\n"
-printf "%s\n" "${rev_files[@]}"
+    cmd=( bin/bbmap/repair.sh
+              in="${r1_file}"
+              in2="${r2_file}"
+              out="${repaired_reads}"
+              repair )
 
-# make temporary output folder
-printf "[ %s: Making tmpdir ]\n" "$(date)"
-tmp_dir="$(mktemp -d --tmpdir "repair.XXXXXX")"
-r1_joined="${tmp_dir}/r1.fastq.gz"
-r2_joined="${tmp_dir}/r2.fastq.gz"
-repaired_reads="${tmp_dir}/repaired.fastq.gz"
-
-# join reads
-printf "[ %s: Concatenating reads to tmpdir ]\n" "$(date)"
-cat "${fwd_files[@]}" > "${r1_joined}" &
-cat "${rev_files[@]}" > "${r2_joined}" &
+    "${cmd[@]}" &
+done < dataraw/rnaseq_sample_ids.csv
 wait
 
-# re-pair reads
-printf "[ %s: Repairing reads ]\n" "$(date)"
-bin/bbmap/repair.sh \
-    in="${r1_joined}" \
-    in2="${r2_joined}" \
-    out="${repaired_reads}"
+# find interleaved read files
+repaired_files=()
+while IFS="" read -r -d $'\0'; do
+    repaired_files+=("$REPLY")
+done < <(find "${tmp_dir}/" \
+         -name "*.fastq.gz" -print0)
+
+# join reads
+merged_reads="${tmp_dir}/merged.fastq.gz"
+cat "${repaired_files[@]}" > "${merged_reads}"
 
 # map reads
 aligned_sam="${tmp_dir}/aln.sam"
 aligned_bam="${outdir}/aln.bam"
 bwa mem -t 15 -p \
     "${FASTA}" \
-    "${repaired_reads}" \
+    "${merged_reads}" \
     > "${aligned_sam}"
 
 # sort the samfile to BAM

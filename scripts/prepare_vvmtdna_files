@@ -10,9 +10,16 @@ outdir="data/vvmtdna"
 if [[ ! -e "${outdir}" ]]; then
   mkdir -p "${outdir}"
 fi
+blatdir="${outdir}/blat"
+if [[ ! -e "${blatdir}" ]]; then
+  mkdir -p "${blatdir}"
+fi
 
 # fix fasta file name
 sed "s/^>.*/>Vvul-mtDNA/" "${FASTA}" > "${FASTA_RENAMED}"
+
+# make a blat index
+/usr/local/bin/faToTwoBit "${FASTA_RENAMED}" "${blatdir}/vvmtdna.2bit"
 
 # fix mitobim gff
 printf "[ %s: Fixing gff ]\n" "$(date)"
