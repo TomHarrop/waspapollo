@@ -21,7 +21,7 @@ mtdna_mcols[, Name := as.character(type)]
 
 mtdna_mcols[grep("^trn", type), new_type := "tRNA"]
 mtdna_mcols[grep("^rrn", type), new_type := "rRNA"]
-mtdna_mcols[is.na(new_type), new_type := "mRNA"]
+mtdna_mcols[is.na(new_type), new_type := "exon"]
 
 mtdna_mcols[, type := new_type][, new_type := NULL]
 

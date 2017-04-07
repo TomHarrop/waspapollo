@@ -31,7 +31,7 @@ printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
     --trackLabel "mitos" \
     --key "MITOS annotation" \
     --trackType "CanvasFeatures" \
-    --type "mRNA,rRNA,tRNA" \
+    --type "exon,rRNA,tRNA" \
     --out "${outdir}"
 
 # generate index
