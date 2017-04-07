@@ -2,7 +2,7 @@
 
 PERL="/usr/bin/perl"
 
-FASTA="dataraw/vvmtdnaVvul_longest_quick_scaffold-it12_noIUPAC.fasta" 
+FASTA="dataraw/vvmtdna/Vvul_longest_quick_scaffold-it12_noIUPAC.fasta" 
 FASTA_RENAMED="dataraw/vvmtdna/Vvul-mtDNA.fasta"
 GFF="dataraw/vvmtdna/vvul_mitos_fixed.gff"
 
@@ -21,7 +21,7 @@ scripts/fix_mitos_gff.R
 # prepare refseqs
 printf "[ %s: Running prepare-refseqs.pl ]\n" "$(date)"
 "${PERL}" bin/apollo/prepare-refseqs.pl \
-    --fasta "${FASTA}" \
+    --fasta "${FASTA_RENAMED}" \
     --out "${outdir}"
 
 # prepare "gff" (mitos gff looks strange)
