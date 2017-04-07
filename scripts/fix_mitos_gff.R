@@ -11,7 +11,7 @@ mitos_gff1 <- rtracklayer::import.gff1(mitos_gff_file)
 seqlevels(mitos_gff1) <- "Vvul-mtDNA"
 
 # move type to ID
-mcols(mitos_gff1)$ID <- mcols(mitos_gff)$type
+mcols(mitos_gff1)$ID <- mcols(mitos_gff1)$type
 
 # fix mcols
 mtdna_mcols <- as.data.table(mcols(mitos_gff1))
