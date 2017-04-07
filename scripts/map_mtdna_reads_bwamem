@@ -50,25 +50,28 @@ printf "%s\n" "${repaired_files[@]}"
 merged_reads="${tmp_dir}/merged.fastq.gz"
 cat "${repaired_files[@]}" > "${merged_reads}"
 
-# map reads
+# map reads and output BAM
 printf "[ %s: Aligning ]\n" "$(date)"
-aligned_sam="${tmp_dir}/aln.sam"
-aligned_bam="${outdir}/aln.bam"
+#aligned_sam="${tmp_dir}/aln.sam"
+aligned_bam="${tmp_dir}/aln.bam"
+sorted_bam="${outdir}/sorted.bam"
 bwa mem -t 15 -p \
     "${FASTA}" \
-    "${merged_reads}" \
-    > "${aligned_sam}"
+    "${merged_reads}" | \
+samtools view --threads 5 -F 2312 \
+    -o "${aligned_bam}" \
+    -bT "${FASTA}" 
 
 # sort the samfile to BAM
 printf "[ %s: Sorting BAMfile ]\n" "$(date)"
 
-samtools view -F 2312 -uT "${FASTA}" "${aligned_sam}" | \
-    samtools sort \
-        -l 9 \
-        -o "${aligned_bam}" \
-        -@ 15
+samtools sort \
+    -l 9 \
+    -o "${sorted_bam}" \
+    -@ 15 \
+    "${aligned_bam}"
 
 printf "[ %s: Indexing BAMfile ]\n" "$(date)"
-samtools index "${aligned_bam}"
+samtools index "${sorted_bam}"
 
 exit 0
