@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+PERL="/usr/bin/perl"
+
+FASTA="dataraw/vvmtdna/longest_quick_scaffold.fasta" 
+FASTA_RENAMED="dataraw/vvmtdna/Vvul-mtDNA.fasta"
+GFF="dataraw/vvmtdna/vvul_mitos_fixed.gff"
+BED="dataraw/vvmtdna/Vvullongestquickscaffoldrepc1.bed"
+
+outdir="data/vvmtdna"
+if [[ ! -e "${outdir}" ]]; then
+  mkdir -p "${outdir}"
+fi
+
+# fix fasta file name
+sed "s/^>.*/>Vvul-mtDNA/" "${FASTA}" > "${FASTA_RENAMED}"
+
+# fix mitobim gff
+
+# prepare refseqs
+printf "[ %s: Running prepare-refseqs.pl ]\n" "$(date)"
+"${PERL}" bin/apollo/prepare-refseqs.pl \
+    --fasta "${FASTA}" \
+    --out "${outdir}"
+
+# prepare "gff" (mitos gff looks strange)
+printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
+"${PERL}" bin/apollo/flatfile-to-json.pl \
+    --gff "${GFF}" \
+    --trackLabel "mitos" \
+    --key "MITOS annotation" \
+    --trackType "CanvasFeatures" \
+    --type "mRNA" \
+    --out "${outdir}"
+
+# generate index
+printf "[ %s: Running generate-names.pl ]\n" "$(date)"
+"${PERL}" bin/apollo/generate-names.pl \
+    --verbose \
+    --out "${outdir}"
+
+chmod -R a=rwx "${outdir}"
+

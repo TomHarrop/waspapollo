@@ -5,7 +5,7 @@ PERL="/usr/bin/perl"
 FASTA="dataraw/scaffolds_sorted.fasta" 
 GFF="dataraw/waspass.all.vvul.gff"
 
-outdir="data/sorted"
+outdir="data/sorted.new"
 if [[ ! -e "${outdir}" ]]; then
   mkdir -p "${outdir}"
 fi
@@ -25,21 +25,25 @@ printf "[ %s: Running prepare-refseqs.pl ]\n" "$(date)"
 printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
 "${PERL}" bin/apollo/flatfile-to-json.pl \
     --gff "${GFF}" \
-    --type mRNA \
-    --trackLabel maker \
+    --type "mRNA" \
+    --trackType "CanvasFeatures" \
+    --trackLabel "maker" \
+    --key "MAKER gene predictions" \
     --out "${outdir}"
 
 # load tblastn GFFs
 printf "[ %s: Running flatfile-to-json.pl on tblastn results ]\n" "$(date)"
 "${PERL}" bin/apollo/flatfile-to-json.pl \
     --gff tblastn/amel_pep/amel_OGSv3.2_pep_hits.gff3 \
-    --type match,similarity \
+    --type "match" \
+    --trackType "CanvasFeatures" \
     --trackLabel "amel_OGSv3.2_pep_tblastn" \
     --out "${outdir}"
 
 "${PERL}" bin/apollo/flatfile-to-json.pl \
     --gff tblastn/pdom_protein/Pdom_r1.2_protein_hits.gff3 \
-    --type match,similarity \
+    --type "match" \
+    --trackType "CanvasFeatures" \
     --trackLabel "Pdom_r1.2_protein_tblastn" \
     --out "${outdir}"
 
@@ -72,6 +76,9 @@ perl bin/apollo/add-bam-track.pl \
 
 # add css to trackList.json... can I do this programmatically?
 #    "css" : "data/css/stranded_rnaseq.css",
+
+# add to BAM tracks to make them canvas features:
+#    "overridePlugins" : "true"
 
 
 # make a blat database
