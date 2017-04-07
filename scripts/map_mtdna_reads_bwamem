@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+set -eu
+
+FASTA="dataraw/vvmtdna/Vvul-mtDNA.fasta"
+
+read_folder="dataraw/NZGL01162"
+outdir="rnaseq/vvmtdna"
+if [[ ! -e "${outdir}" ]]; then
+  mkdir -p "${outdir}"
+fi
+
+# make bwamem index
+bwa index "${FASTA}" &
+
+# find read files
+fwd_files=()
+rev_files=()
+while IFS="" read -r -d $'\0'; do
+    fwd_files+=("$REPLY")
+done < <(find "${read_folder}/" \
+         -name "*R1.fastq.gz" -print0)
+while IFS="" read -r -d $'\0'; do
+    rev_files+=("$REPLY")
+done < <(find "${read_folder}/" \
+         -name "*R2.fastq.gz" -print0)
+
+printf "fwd_files\n"
+printf "%s\n" "${fwd_files[@]}"
+printf "rev_files\n"
+printf "%s\n" "${rev_files[@]}"
+
+# make temporary output folder
+printf "[ %s: Making tmpdir ]\n" "$(date)"
+tmp_dir="$(mktemp -d --tmpdir "repair.XXXXXX")"
+r1_joined="${tmp_dir}/r1.fastq.gz"
+r2_joined="${tmp_dir}/r2.fastq.gz"
+repaired_reads="${tmp_dir}/repaired.fastq.gz"
+
+# join reads
+printf "[ %s: Concatenating reads to tmpdir ]\n" "$(date)"
+cat "${fwd_files[@]}" > "${r1_joined}" &
+cat "${rev_files[@]}" > "${r2_joined}" &
+wait
+
+# re-pair reads
+printf "[ %s: Repairing reads ]\n" "$(date)"
+bin/bbmap/repair.sh -Xmx50g \
+    in="${r1_joined}" \
+    in2="${r2_joined}" \
+    out="${repaired_reads}"
+
+# map reads
+aligned_sam="${tmp_dir}/aln.sam"
+aligned_bam="${outdir}/aln.bam"
+bwa mem -t 15 -p \
+    "${FASTA}" \
+    "${repaired_reads}" \
+    > "${aligned_sam}"
+
+# sort the samfile to BAM
+samtools sort \
+    -I 9 \
+    -o "${aligned_bam}" \
+    -@ 15
+
+samtools index "${aligned_bam}"
+
+exit 0
