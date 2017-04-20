@@ -26,10 +26,10 @@ printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
 "${PERL}" bin/apollo/flatfile-to-json.pl \
     --gff "${GFF}" \
     --type "mRNA" \
-    # --trackType "CanvasFeatures" \
     --trackLabel "maker" \
     --key "MAKER gene predictions" \
     --out "${outdir}"
+    # --trackType "CanvasFeatures" \
 
 # load tblastn GFFs
 # printf "[ %s: Running flatfile-to-json.pl on tblastn results ]\n" "$(date)"
