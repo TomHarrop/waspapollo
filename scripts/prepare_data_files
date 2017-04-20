@@ -5,7 +5,7 @@ PERL="/usr/bin/perl"
 FASTA="dataraw/scaffolds_sorted.fasta" 
 GFF="dataraw/waspass.all.vvul.gff"
 
-outdir="data/sorted.new"
+outdir="data/sorted"
 if [[ ! -e "${outdir}" ]]; then
   mkdir -p "${outdir}"
 fi
@@ -26,26 +26,26 @@ printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
 "${PERL}" bin/apollo/flatfile-to-json.pl \
     --gff "${GFF}" \
     --type "mRNA" \
-    --trackType "CanvasFeatures" \
+    # --trackType "CanvasFeatures" \
     --trackLabel "maker" \
     --key "MAKER gene predictions" \
     --out "${outdir}"
 
 # load tblastn GFFs
-printf "[ %s: Running flatfile-to-json.pl on tblastn results ]\n" "$(date)"
-"${PERL}" bin/apollo/flatfile-to-json.pl \
-    --gff tblastn/amel_pep/amel_OGSv3.2_pep_hits.gff3 \
-    --type "match" \
-    --trackType "CanvasFeatures" \
-    --trackLabel "amel_OGSv3.2_pep_tblastn" \
-    --out "${outdir}"
+# printf "[ %s: Running flatfile-to-json.pl on tblastn results ]\n" "$(date)"
+# "${PERL}" bin/apollo/flatfile-to-json.pl \
+#     --gff tblastn/amel_pep/amel_OGSv3.2_pep_hits.gff3 \
+#     --type "match" \
+#     --trackType "CanvasFeatures" \
+#     --trackLabel "amel_OGSv3.2_pep_tblastn" \
+#     --out "${outdir}"
 
-"${PERL}" bin/apollo/flatfile-to-json.pl \
-    --gff tblastn/pdom_protein/Pdom_r1.2_protein_hits.gff3 \
-    --type "match" \
-    --trackType "CanvasFeatures" \
-    --trackLabel "Pdom_r1.2_protein_tblastn" \
-    --out "${outdir}"
+# "${PERL}" bin/apollo/flatfile-to-json.pl \
+#     --gff tblastn/pdom_protein/Pdom_r1.2_protein_hits.gff3 \
+#     --type "match" \
+#     --trackType "CanvasFeatures" \
+#     --trackLabel "Pdom_r1.2_protein_tblastn" \
+#     --out "${outdir}"
 
 # generate index
 printf "[ %s: Running generate-names.pl ]\n" "$(date)"
@@ -54,25 +54,25 @@ printf "[ %s: Running generate-names.pl ]\n" "$(date)"
     --out "${outdir}"
 
 # load STAR bamfile(s)
-samtools index "data/sorted/rnaseq/worker_merged.bam" &
-samtools index "data/sorted/rnaseq/larva_merged.bam" &
-samtools index "data/sorted/rnaseq/queen_merged.bam" &
-wait
+# samtools index "data/sorted/rnaseq/worker_merged.bam" &
+# samtools index "data/sorted/rnaseq/larva_merged.bam" &
+# samtools index "data/sorted/rnaseq/queen_merged.bam" &
+# wait
 
-perl bin/apollo/add-bam-track.pl \
-    --bam_url "rnaseq/worker_merged.bam" \
-    --label "worker" --key "Worker RNAseq reads" \
-    --in "data/sorted/trackList.json"
+# perl bin/apollo/add-bam-track.pl \
+#     --bam_url "rnaseq/worker_merged.bam" \
+#     --label "worker" --key "Worker RNAseq reads" \
+#     --in "data/sorted/trackList.json"
 
-perl bin/apollo/add-bam-track.pl \
-    --bam_url rnaseq/larva_merged.bam \
-    --label "larva" --key "Larva RNAseq reads" \
-    --in data/sorted/trackList.json
+# perl bin/apollo/add-bam-track.pl \
+#     --bam_url rnaseq/larva_merged.bam \
+#     --label "larva" --key "Larva RNAseq reads" \
+#     --in data/sorted/trackList.json
 
-perl bin/apollo/add-bam-track.pl \
-    --bam_url rnaseq/queen_merged.bam \
-    --label "queen" --key "Queen RNAseq reads" \
-    --in data/sorted/trackList.json
+# perl bin/apollo/add-bam-track.pl \
+#     --bam_url rnaseq/queen_merged.bam \
+#     --label "queen" --key "Queen RNAseq reads" \
+#     --in data/sorted/trackList.json
 
 # add css to trackList.json... can I do this programmatically?
 #    "css" : "data/css/stranded_rnaseq.css",
@@ -81,13 +81,13 @@ perl bin/apollo/add-bam-track.pl \
 #    "overridePlugins" : "true"
 
 # make a blat database
-printf "[ %s: Running faToTwoBit ]\n" "$(date)"
-/usr/local/bin/faToTwoBit "${FASTA}" "${blatdir}/vv.2bit"
+# printf "[ %s: Running faToTwoBit ]\n" "$(date)"
+# /usr/local/bin/faToTwoBit "${FASTA}" "${blatdir}/vv.2bit"
 
 # make the whole data and blat directories accessible to everyone so that
 # tomcat can read it
 chmod -R a=rwx "${outdir}"
-chmod -R a=rwx "${blatdir}"
-chmod -R a=rwx "rnaseq/merged"
+# chmod -R a=rwx "${blatdir}"
+# chmod -R a=rwx "rnaseq/merged"
 
 exit 0

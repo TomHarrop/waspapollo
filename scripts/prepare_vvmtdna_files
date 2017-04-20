@@ -41,6 +41,8 @@ printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
     --type "exon,rRNA,tRNA" \
     --out "${outdir}"
 
+# add bam file?
+
 # generate index
 printf "[ %s: Running generate-names.pl ]\n" "$(date)"
 "${PERL}" bin/apollo/generate-names.pl \
