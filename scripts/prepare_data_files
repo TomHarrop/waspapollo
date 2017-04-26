@@ -27,7 +27,7 @@ printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
     --gff "${GFF}" \
     --type "mRNA" \
     --trackLabel "maker" \
-    --key "MAKER gene predictions" \
+    --key "maker" \
     --out "${outdir}"
     # --trackType "CanvasFeatures" \
 
