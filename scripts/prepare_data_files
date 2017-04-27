@@ -87,7 +87,7 @@ printf "[ %s: Running faToTwoBit ]\n" "$(date)"
 # make the whole data and blat directories accessible to everyone so that
 # tomcat can read it
 chmod -R a=rwx "${outdir}"
-# chmod -R a=rwx "${blatdir}"
+chmod -R a=rwx "${blatdir}"
 # chmod -R a=rwx "rnaseq/merged"
 
 exit 0
