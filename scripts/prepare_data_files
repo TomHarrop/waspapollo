@@ -2,8 +2,8 @@
 
 PERL="/usr/bin/perl"
 
-FASTA="dataraw/scaffolds_sorted.fasta" 
-GFF="dataraw/waspass.all.vvul.gff"
+FASTA="dataraw/vvul/scaffolds_sorted.fasta" 
+GFF="dataraw/vvul/maker_filtered.gff3"
 
 outdir="data/sorted"
 if [[ ! -e "${outdir}" ]]; then
@@ -25,11 +25,11 @@ printf "[ %s: Running prepare-refseqs.pl ]\n" "$(date)"
 printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
 "${PERL}" bin/apollo/flatfile-to-json.pl \
     --gff "${GFF}" \
-    --type "mRNA" \
+    --type "gene" \
     --trackLabel "maker" \
-    --key "maker" \
+    --key "MAKER genome annotation" \
     --out "${outdir}"
-    # --trackType "CanvasFeatures" \
+    --trackType "CanvasFeatures" \
 
 # load tblastn GFFs
 # printf "[ %s: Running flatfile-to-json.pl on tblastn results ]\n" "$(date)"
