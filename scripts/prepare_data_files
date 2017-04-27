@@ -28,8 +28,8 @@ printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
     --type "gene" \
     --trackLabel "maker" \
     --key "MAKER genome annotation" \
-    --out "${outdir}"
-    --trackType "CanvasFeatures" \
+    --out "${outdir}" \
+    --trackType "CanvasFeatures"
 
 # load tblastn GFFs
 # printf "[ %s: Running flatfile-to-json.pl on tblastn results ]\n" "$(date)"
