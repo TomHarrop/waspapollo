@@ -81,8 +81,8 @@ printf "[ %s: Running generate-names.pl ]\n" "$(date)"
 #    "overridePlugins" : "true"
 
 # make a blat database
-# printf "[ %s: Running faToTwoBit ]\n" "$(date)"
-# /usr/local/bin/faToTwoBit "${FASTA}" "${blatdir}/vv.2bit"
+printf "[ %s: Running faToTwoBit ]\n" "$(date)"
+/usr/local/bin/faToTwoBit "${FASTA}" "${blatdir}/vv.2bit"
 
 # make the whole data and blat directories accessible to everyone so that
 # tomcat can read it

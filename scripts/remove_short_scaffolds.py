@@ -2,7 +2,7 @@
 
 from Bio import SeqIO
 
-scaffolds_file = 'dataraw/waspass.fasta'
+scaffolds_file = 'dataraw/vvul/waspass.fasta'
 
 # make a sorted list of tuples of scaffold name and sequence length
 length_id_unsorted = ((len(rec), rec.id) for
@@ -23,5 +23,5 @@ record_index = SeqIO.index(scaffolds_file, 'fasta')
 # write selected records in correct order to disk
 selected_records = (record_index[id] for id in scaffolds_over_1kb)
 SeqIO.write(sequences=selected_records,
-            handle='dataraw/scaffolds_sorted.fasta',
+            handle='dataraw/vvul/scaffolds_sorted.fasta',
             format='fasta')
