@@ -3,7 +3,7 @@
 PERL="/usr/bin/perl"
 
 FASTA="dataraw/vvul/scaffolds_sorted.fasta" 
-GFF="dataraw/vvul/maker_filtered.gff3"
+GFF="dataraw/vvul/maker_filtered_nostuff.gff3"
 
 outdir="data/test_organism"
 if [[ ! -e "${outdir}" ]]; then
@@ -75,7 +75,7 @@ printf "[ %s: Running generate-names.pl ]\n" "$(date)"
 #     --in data/sorted/trackList.json
 
 # add css to trackList.json... can I do this programmatically?
-#    "css" : "data/css/stranded_rnaseq.css",
+#    "css" : "data/css/stranded_rnaseq.css",ZZZZ
 
 # add to BAM tracks to make them canvas features:
 #    "overridePlugins" : "true"
