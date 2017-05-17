@@ -2,8 +2,8 @@
 
 PERL="/usr/bin/perl"
 
-FASTA="dataraw/vvul/scaffolds_sorted.fasta" 
-GFF="dataraw/vvul/maker_filtered_nostuff.gff3"
+FASTA="dataraw/vvul/scaffolds_renamed.fasta" 
+GFF="dataraw/vvul/maker_filtered.gff3"
 
 outdir="data/test_organism"
 if [[ ! -e "${outdir}" ]]; then

@@ -12,6 +12,9 @@ rutils::GenerateMessage("Subsetting")
 keep_features <- c("gene", "mRNA", "exon", "CDS")
 filtered_gff <- vvul_gff3[vvul_gff3$type %in% keep_features]
 
+# remove pipe character
+seqlevels(filtered_gff) <- gsub("\\|.*$", "", seqlevels(filtered_gff))
+
 # export result
 rutils::GenerateMessage("Writing filtered GFF3")
 rtracklayer::export.gff3(filtered_gff, "dataraw/vvul/maker_filtered.gff3")
