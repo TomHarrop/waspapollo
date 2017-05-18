@@ -10,9 +10,9 @@ if (Sys.getenv("APOLLO_USERNAME") != "") {
 }
 
 if (Sys.getenv("APOLLO_URL") != "") {
-    apollo_url <- Sys.getenv("APOLLO_USERNAME")
+    apollo_url <- Sys.getenv("APOLLO_URL")
 } else {
-    stop("Set environment variable APOLLO_USERNAME")
+    stop("Set environment variable APOLLO_URL")
 }
 
 path <- "/IOService/write"
