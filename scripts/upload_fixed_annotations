@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -eu
+
+# PERL5LIB required by add_features perl script
+if [[ -v PERL5LIB ]]; then
+    export PERL5LIB="${PERL5LIB}:bin/jbrowse_libs"
+else
+    export PERL5LIB="bin/jbrowse_libs"
+fi
+
+# use environment variables for apollo url and username
+if [[ ! -v APOLLO_URL ]]; then
+    printf "Set environment variable APOLLO_URL\n"
+    exit 1
+fi
+if [[ ! -v APOLLO_USERNAME ]]; then
+    printf "Set environment variable APOLLO_USERNAME\n"
+    exit 1
+fi
+
+bin/apollo_source/tools/data/add_features_from_gff3_to_annotations.pl \
+    --url "${APOLLO_URL}" \
+    --username "${APOLLO_USERNAME}" \
+    --password "password" \
+    --input "apollo_annotations/apollo_annotations.gff3" \
+    --organism "Test organism"
