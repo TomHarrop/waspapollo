@@ -1,22 +1,34 @@
+#!/usr/bin/env Rscript
+
 library(httr)
 library(GenomicRanges)
 
-my_email <- ""
+if (Sys.getenv("APOLLO_USERNAME") != "") {
+    apollo_username <- Sys.getenv("APOLLO_USERNAME")
+} else {
+    stop("Set environment variable APOLLO_USERNAME")
+}
 
-base_url <- "http://thehive.otago.ac.nz:8080/apollo-2.0.6"
+if (Sys.getenv("APOLLO_URL") != "") {
+    apollo_url <- Sys.getenv("APOLLO_USERNAME")
+} else {
+    stop("Set environment variable APOLLO_USERNAME")
+}
+
 path <- "/IOService/write"
 
 # download annotations from apollo
-gff_response <- httr::POST(url = paste0(base_url, path),
-           encode = "json",
-           body = list(
-             username = my_email,
-             password = "password",
-             type = "GFF3",
-             seqType = "genomic",
-             format = "text",
-             organism = "Vespula vulgaris",
-             output = "text"))
+gff_response <- httr::POST(
+    url = paste0(apollo_url, path),
+    encode = "json",
+    body = list(
+        username = apollo_username,
+        password = "password",
+        type = "GFF3",
+        seqType = "genomic",
+        format = "text",
+        organism = "Vespula vulgaris",
+        output = "text"))
 
 gff_text <- content(gff_response, as = "text")
 
