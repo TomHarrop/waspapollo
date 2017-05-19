@@ -23,6 +23,7 @@ src/vvul/tblastn_peptides
 src/vvul/star_index
 src/vvul/star_pass1
 src/vvul/star_pass2
+src/vvul/merge_bam_files
 
 6. Run apollo data generation scripts
 

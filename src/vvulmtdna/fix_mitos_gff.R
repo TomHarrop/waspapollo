@@ -4,7 +4,7 @@ library(GenomicRanges)
 library(data.table)
 
 # load the gff1
-mitos_gff_file = "dataraw/vvmtdna/VvulGU207861repc1bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.gff"
+mitos_gff_file = "raw_data/vvulmtdna/VvulGU207861repc1bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.gff"
 mitos_gff1 <- rtracklayer::import.gff1(mitos_gff_file)
 
 # fix chromosome names
@@ -30,6 +30,6 @@ mcols(mitos_gff1) <- data.frame(mtdna_mcols)
 
 # write output to gff3
 rtracklayer::export(object = mitos_gff1,
-                    con = "dataraw/vvmtdna/vvul_mitos_fixed.gff",
+                    con = "processed_data/vvulmtdna/vvul_mitos_fixed.gff",
                     format = "gff3",
                     version = "3")
