@@ -75,17 +75,17 @@ printf " queen_files: %s\n" "${queen_files[@]}"
 
 # merge files per sample type
 "${picard_tools[@]}" MergeSamFiles \
-    "$(printf "I=%s " "${worker_files[@]}")" \
+    $(printf "I=%s " "${worker_files[@]}") \
     "O=${outdir}/worker_merged.bam" \
     ASSUME_SORTED=true \
     USE_THREADING=true & 
 "${picard_tools[@]}" MergeSamFiles \
-    "$(printf "I=%s " "${larva_files[@]}")" \
+    $(printf "I=%s " "${larva_files[@]}") \
     "O=${outdir}/larva_merged.bam" \
     ASSUME_SORTED=true \
     USE_THREADING=true &
 "${picard_tools[@]}" MergeSamFiles \
-    "$(printf "I=%s " "${queen_files[@]}")" \
+    $(printf "I=%s " "${queen_files[@]}") \
     "O=${outdir}/queen_merged.bam" \
     ASSUME_SORTED=true \
     USE_THREADING=true &
