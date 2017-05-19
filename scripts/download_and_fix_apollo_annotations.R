@@ -15,6 +15,12 @@ if (Sys.getenv("APOLLO_URL") != "") {
     stop("Set environment variable APOLLO_URL")
 }
 
+if (Sys.getenv("APOLLO_PASSWORD") != "") {
+    apollo_password <- Sys.getenv("APOLLO_PASSWORD")
+} else {
+    stop("Set environment variable APOLLO_PASSWORD")
+}
+
 path <- "/IOService/write"
 
 # download annotations from apollo
@@ -23,7 +29,7 @@ gff_response <- httr::POST(
     encode = "json",
     body = list(
         username = apollo_username,
-        password = "password",
+        password = apollo_password,
         type = "GFF3",
         seqType = "genomic",
         format = "text",

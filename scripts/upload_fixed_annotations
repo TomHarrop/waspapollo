@@ -18,10 +18,25 @@ if [[ ! -v APOLLO_USERNAME ]]; then
     printf "Set environment variable APOLLO_USERNAME\n"
     exit 1
 fi
+if [[ ! -v APOLLO_PASSWORD ]]; then
+    printf "Set environment variable APOLLO_PASSWORD\n"
+    exit 1
+fi
 
+# delete existing annotations from test organism
+curl_path="${APOLLO_URL}/organism/deleteOrganismFeatures"
+curl "${curl_path}" \
+    -H 'Content-Type: application/json' \
+    --data "{\"username\":\"${APOLLO_USERNAME}\", \"password\":\"${APOLLO_PASSWORD}\", \"organism\":\"Test organism\" }" ;
+
+
+# upload cleaned annotations
 bin/apollo_source/tools/data/add_features_from_gff3_to_annotations.pl \
     --url "${APOLLO_URL}" \
     --username "${APOLLO_USERNAME}" \
-    --password "password" \
+    --password "${APOLLO_PASSWORD}" \
     --input "apollo_annotations/apollo_annotations.gff3" \
-    --organism "Test organism"
+    --organism "Test organism" \
+    --success_log "apollo_annotations/success.log" \
+    --error_log "apollo_annotations/errors.log"
+
