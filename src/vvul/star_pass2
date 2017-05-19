@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 
-outdir="rnaseq/pass1"
+outdir="processed_data/vvul/rnaseq/pass2"
 if [[ ! -d "${outdir}" ]]; then
     mkdir -p "${outdir}"
 fi
 
-read_folder="dataraw/NZGL01162"
-index="rnaseq/index"
+read_folder="raw_data/vvul/rnaseq/NZGL01162"
+index="processed_data/vvul/rnaseq/index"
+
+# find the SJ files
+splice_junction_files=()
+while IFS="" read -r -d $'\0'; do
+    splice_junction_files+=("$REPLY")
+done < <(find "processed_data/vvul/rnaseq/pass1" \
+         -name "*SJ.out.tab" -print0)
 
 # loop over sample_ids in csv file
 while IFS="," read -r sample r1 r2
@@ -22,12 +29,14 @@ do
 
     # set up STAR job
     cmd=( bin/STAR
-              --runThreadN 10
+              --runThreadN 15
               --genomeDir "${index}"
               --readFilesIn "${r1_file}" "${r2_file}" 
               --readFilesCommand zcat
               --outFileNamePrefix "${outdir}/${sample}."
-              --outSAMtype None )
+              --outSAMtype BAM SortedByCoordinate
+              --quantMode GeneCounts 
+              --sjdbFileChrStartEnd "${splice_junction_files[@]}")
     printf "Final command line: "
     printf "%s " "${cmd[@]//+([[:blank:]])/ }"
     printf "\n"
@@ -43,7 +52,7 @@ do
         STAR version,$(bin/STAR --version)
 _EOF_
 
-done < dataraw/rnaseq_sample_ids.csv
+done < raw_data/vvul/rnaseq/rnaseq_sample_ids.csv
 
 wait
 

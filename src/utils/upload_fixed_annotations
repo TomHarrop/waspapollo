@@ -2,6 +2,9 @@
 
 set -eu
 
+downloaded_annotations="apollo_annotations/apollo_annotations.gff3"
+filtered_annotations="apollo_annotations/apollo_annotations_filtered.gff3"
+
 # PERL5LIB required by add_features perl script
 if [[ -v PERL5LIB ]]; then
     export PERL5LIB="${PERL5LIB}:bin/jbrowse_libs"
@@ -29,13 +32,15 @@ curl "${curl_path}" \
     -H 'Content-Type: application/json' \
     --data "{\"username\":\"${APOLLO_USERNAME}\", \"password\":\"${APOLLO_PASSWORD}\", \"organism\":\"Test organism\" }" ;
 
+# remove failing entries from GFF
+cp "${downloaded_annotations}" "${filtered_annotations}"
 
 # upload cleaned annotations
 bin/apollo_source/tools/data/add_features_from_gff3_to_annotations.pl \
     --url "${APOLLO_URL}" \
     --username "${APOLLO_USERNAME}" \
     --password "${APOLLO_PASSWORD}" \
-    --input "apollo_annotations/apollo_annotations.gff3" \
+    --input "${downloaded_annotations}" \
     --use_name_for_feature \
     --organism "Test organism" \
     --success_log "apollo_annotations/success.log" \

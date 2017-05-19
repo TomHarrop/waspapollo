@@ -1,31 +1,37 @@
 #!/usr/bin/env bash
 
-FASTA="dataraw/scaffolds_sorted.fasta"
-DB="tblastn/db/scaffolds_sorted"
+FASTA="processed_data/vvul/scaffolds_renamed.fasta"
+OUTDIR="processed_data/vvul/tblastn/"
 
-AMEL_QUERY="dataraw/amel_OGSv3.2_pep.fa"
-AMEL_HITS="tblastn/amel_pep/amel_OGSv3.2_pep_hits.blast"
-AMEL_GFF="tblastn/amel_pep/amel_OGSv3.2_pep_hits.gff3"
+db="${OUTDIR}/db/scaffolds_renamed"
 
-PDOM_QUERY="dataraw/GCF_001465965.1_Pdom_r1.2_protein.faa"
-PDOM_HITS="tblastn/pdom_protein/Pdom_r1.2_protein_hits.blast"
-PDOM_GFF="tblastn/pdom_protein/Pdom_r1.2_protein_hits.gff3"
+AMEL_QUERY="raw_data/vvul/tblastn/amel_OGSv3.2_pep.fa"
+AMEL_HITS="${OUTDIR}/amel_OGSv3.2_pep_hits.blast"
+AMEL_GFF="${OUTDIR}/amel_OGSv3.2_pep_hits.gff3"
+
+PDOM_QUERY="raw_data/vvul/tblastn/GCF_001465965.1_Pdom_r1.2_protein.faa"
+PDOM_HITS="${OUTDIR}/Pdom_r1.2_protein_hits.blast"
+PDOM_GFF="${OUTDIR}/Pdom_r1.2_protein_hits.gff3"
 
 num_cpus=20
 
 # make blast db
+dbdir=$(dirname "${db}")
+if [[ ! -e "${dbdir}" ]]; then
+    mkdir -p "${dbdir}"
+fi
 makeblastdb -dbtype nucl -in "${FASTA}" \
-    -out "${DB}"
+    -out "${db}"
 
 # run blast queries
 tblastn -query "${AMEL_QUERY}" \
-    -db "${DB}" \
+    -db "${db}" \
     -evalue 1e-6 \
     -out "${AMEL_HITS}" \
     -num_threads "${num_cpus}" &
 
 tblastn -query "${PDOM_QUERY}" \
-    -db "${DB}" \
+    -db "${db}" \
     -evalue 1e-6 \
     -out "${PDOM_HITS}" \
     -num_threads "${num_cpus}" &

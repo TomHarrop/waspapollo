@@ -3,10 +3,11 @@
 from Bio import SeqIO
 import re
 
-scaffolds_file = 'dataraw/vvul/scaffolds_sorted.fasta'
+sorted_scaffolds = 'processed_data/vvul/scaffolds_sorted.fasta'
+renamed_scaffolds = 'processed_data/vvul/scaffolds_renamed.fasta'
 
 # read the fasta file
-with open(scaffolds_file, 'r') as handle:
+with open(sorted_scaffolds, 'r') as handle:
     fasta_records = SeqIO.parse(handle, 'fasta')
     records = [x for x in fasta_records]
 
@@ -20,5 +21,5 @@ for record in records:
 
 # write fixed records in back to disk
 SeqIO.write(sequences=records,
-            handle='dataraw/vvul/scaffolds_renamed.fasta',
+            handle=renamed_scaffolds,
             format='fasta')

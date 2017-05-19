@@ -4,7 +4,7 @@ library(GenomicRanges)
 
 # load the gff1
 rutils::GenerateMessage("Loading GFF")
-vvul_gff_file = "dataraw/vvul/waspass.all.vvul.gff"
+vvul_gff_file = "raw_data/vvul/annotation/waspass.all.vvul.gff"
 vvul_gff3 <- rtracklayer::import.gff3(vvul_gff_file)
 
 # subset feature
@@ -17,4 +17,4 @@ seqlevels(filtered_gff) <- gsub("\\|.*$", "", seqlevels(filtered_gff))
 
 # export result
 rutils::GenerateMessage("Writing filtered GFF3")
-rtracklayer::export.gff3(filtered_gff, "dataraw/vvul/maker_filtered.gff3")
+rtracklayer::export.gff3(filtered_gff, "processed_data/vvul/maker_filtered.gff3")

@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-outdir="rnaseq/index"
+outdir="processed_data/vvul/rnaseq/index"
 if [[ ! -d "${outdir}" ]]; then
     mkdir -p "${outdir}"
 fi
 log_file="${outdir}/index_log.txt"
 
-FASTA="dataraw/scaffolds_sorted.fasta" 
-GFF="dataraw/waspass.all.vvul.gff"
+FASTA="processed_data/vvul/scaffolds_renamed.fasta" 
+GFF="processed_data/vvul/maker_filtered.gff3"
 
 cmd=( bin/STAR 
-          --runThreadN 8
+          --runThreadN 20
           --runMode genomeGenerate
           --genomeDir "${outdir}"
           --genomeFastaFiles "${FASTA}"
