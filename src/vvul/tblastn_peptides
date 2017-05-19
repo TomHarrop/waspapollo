@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -eu
+
 FASTA="processed_data/vvul/scaffolds_renamed.fasta"
 OUTDIR="processed_data/vvul/tblastn/"
 

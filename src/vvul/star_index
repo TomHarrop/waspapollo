@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -eu
+
 outdir="processed_data/vvul/rnaseq/index"
 if [[ ! -d "${outdir}" ]]; then
     mkdir -p "${outdir}"

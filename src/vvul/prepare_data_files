@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -eu
+
 PERL="/usr/bin/perl"
 
 FASTA="processed_data/vvul/scaffolds_renamed.fasta" 
