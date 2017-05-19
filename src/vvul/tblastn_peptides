@@ -15,7 +15,7 @@ PDOM_QUERY="raw_data/vvul/tblastn/GCF_001465965.1_Pdom_r1.2_protein.faa"
 PDOM_HITS="${OUTDIR}/Pdom_r1.2_protein_hits.blast"
 PDOM_GFF="${OUTDIR}/Pdom_r1.2_protein_hits.gff3"
 
-num_cpus=20
+num_cpus=5
 
 # make blast db
 dbdir=$(dirname "${db}")
