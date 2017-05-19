@@ -2,6 +2,8 @@
 
 set -eu
 
+picard_tools=( java -Xmx100g -jar bin/picard/picard.jar )
+
 bam_folder="processed_data/vvul/rnaseq/pass2"
 outdir="processed_data/vvul/rnaseq/merged"
 
@@ -20,8 +22,8 @@ done < <(find "${bam_folder}/" \
 
 # loop over the bamfiles
 for bf in "${bam_files[@]}"; do
-    sample_name=$(basename ${bf} ".Aligned.sortedByCoord.out.bam" )
-    cmd=( picard-tools AddOrReplaceReadGroups
+    sample_name=$(basename "${bf}" ".Aligned.sortedByCoord.out.bam" )
+    cmd=( "${picard_tools[@]}" AddOrReplaceReadGroups
               "I=${bf}"
               "O=${outdir}/${sample_name}.bam"
               "RGID=${ID}"
@@ -68,17 +70,17 @@ printf " larva_files: %s\n" "${larva_files[@]}"
 printf " queen_files: %s\n" "${queen_files[@]}"
 
 # merge files per sample type
-picard-tools MergeSamFiles \
+"${picard_tools[@]}" MergeSamFiles \
     "$(printf "I=%s " "${worker_files[@]}")" \
     "O=${outdir}/worker_merged.bam" \
     ASSUME_SORTED=true \
     USE_THREADING=true & 
-picard-tools MergeSamFiles \
+"${picard_tools[@]}" MergeSamFiles \
     "$(printf "I=%s " "${larva_files[@]}")" \
     "O=${outdir}/larva_merged.bam" \
     ASSUME_SORTED=true \
     USE_THREADING=true &
-picard-tools MergeSamFiles \
+"${picard_tools[@]}" MergeSamFiles \
     "$(printf "I=%s " "${queen_files[@]}")" \
     "O=${outdir}/queen_merged.bam" \
     ASSUME_SORTED=true \
