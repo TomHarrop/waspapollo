@@ -4,7 +4,7 @@ Run all scripts on thehive unless specified.
 
 1. Filter the maker GFF, remove pipe characters and output to GFF3
 
-src/vvul/fix_maker_gff.R
+src/vvul/fix_vvul_maker_gff.R
 
 2. Sort the Celera fasta file and remove contigs < 1 kb
 
