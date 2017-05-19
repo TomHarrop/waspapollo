@@ -7,6 +7,10 @@ picard_tools=( java -Xmx100g -jar bin/picard/picard.jar )
 bam_folder="processed_data/vvul/rnaseq/pass2"
 outdir="processed_data/vvul/rnaseq/merged"
 
+if [[ ! -e "${outdir}" ]]; then
+    mkdir "${outdir}"
+fi
+
 # read group properties
 ID="C7GKRANXX.1"
 PL="illumina"
