@@ -25,6 +25,8 @@ src/vvul/star_pass1
 src/vvul/star_pass2
 src/vvul/merge_bam_files
 
+5a. Symlink the bamfiles to the data directory
+
 6. Run apollo data generation scripts
 
 src/vvul/prepare_data_files
@@ -33,9 +35,9 @@ src/vvul/prepare_data_files
 
 "overridePlugins" : "true"
 
-8. Specify css for RNAseq reads to colour them by strand. Add the following to  apollo_data/vvul/trackList.json:
-**FIXME**: is this necessary for canvasfeatures?
+8. If using HTML features for BAM files, specify css for RNAseq reads to colour them by strand. This is not needed for CanvasFeatures. Add the following to apollo_data/vvul/trackList.json:
 
 "css" : "data/css/stranded_rnaseq.css"
 
 9. Load the organism into apollo
+**FIXME** API call for this

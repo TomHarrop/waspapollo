@@ -98,3 +98,4 @@ samtools index "${outdir}/larva_merged.bam" &
 samtools index "${outdir}/queen_merged.bam" &
 
 wait
+ 
