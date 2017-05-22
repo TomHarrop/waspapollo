@@ -10,15 +10,20 @@ log_file="${outdir}/index_log.txt"
 
 FASTA="processed_data/vvul/scaffolds_renamed.fasta" 
 GFF="processed_data/vvul/maker_filtered.gff3"
+gtf="${outdir}/maker_filtered.gtf"
 
+# convert the GFF to GTF (works better for quantification)
+gffread -T "${GFF}" -o "${gtf}"
+
+# generate STAR index
 cmd=( bin/STAR 
           --runThreadN 20
           --runMode genomeGenerate
           --genomeDir "${outdir}"
           --genomeFastaFiles "${FASTA}"
-          --sjdbGTFfile "${GFF}"
-          --sjdbGTFtagExonParentTranscript Parent
-          --sjdbGTFtagExonParentGene Parent
+          --sjdbGTFfile "${gtf}"
+          --sjdbGTFtagExonParentTranscript transcript_id
+          --sjdbGTFtagExonParentGene gene_id
           --sjdbOverhang 99 )
 
 shopt -s extglob
