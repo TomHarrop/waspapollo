@@ -19,6 +19,7 @@ gffread -T "${GFF}" -o "${gtf}"
 cmd=( bin/STAR 
           --runThreadN 20
           --runMode genomeGenerate
+          --outFileNamePrefix "${outdir}/"
           --genomeDir "${outdir}"
           --genomeFastaFiles "${FASTA}"
           --sjdbGTFfile "${gtf}"
