@@ -18,7 +18,7 @@ if [[ ! -v APOLLO_URL ]]; then
     exit 1
 fi
 if [[ ! -v APOLLO_USERNAME ]]; then
-    printf "Set environment variable APOLLO_USERNAME\n"
+    printf "Set environment varidir bable APOLLO_USERNAME\n"
     exit 1
 fi
 if [[ ! -v APOLLO_PASSWORD ]]; then
@@ -33,14 +33,15 @@ curl "${curl_path}" \
     --data "{\"username\":\"${APOLLO_USERNAME}\", \"password\":\"${APOLLO_PASSWORD}\", \"organism\":\"Test organism\" }" ;
 
 # remove failing entries from GFF
-cp "${downloaded_annotations}" "${filtered_annotations}"
+# (r script src/utils/split_problematic_gff_entries.R)
+# RUN INTERACTIVELY TO CATCH ALL IDs
 
 # upload cleaned annotations
 bin/apollo_source/tools/data/add_features_from_gff3_to_annotations.pl \
     --url "${APOLLO_URL}" \
     --username "${APOLLO_USERNAME}" \
     --password "${APOLLO_PASSWORD}" \
-    --input "${downloaded_annotations}" \
+    --input "${filtered_annotations}" \
     --use_name_for_feature \
     --organism "Test organism" \
     --success_log "apollo_annotations/success.log" \

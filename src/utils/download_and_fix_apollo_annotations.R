@@ -39,11 +39,11 @@ gff_response <- httr::POST(
 gff_text <- content(gff_response, as = "text")
 
 # write to a temp file
-tmp <- tempfile(fileext = ".gff3")
-writeChar(gff_text, tmp, eos = NULL)
+gff_text_file <- "apollo_annotations/gff_response.gff3"
+writeChar(gff_text, gff_text_file, eos = NULL)
 
 # load into GRanges object
-gff <- rtracklayer::import.gff3(tmp)
+gff <- rtracklayer::import.gff3(gff_text_file)
 
 # remove pipe character
 seqlevels(gff) <- gsub("\\|.*$", "", seqlevels(gff))
