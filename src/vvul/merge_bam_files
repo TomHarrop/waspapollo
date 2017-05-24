@@ -92,10 +92,23 @@ printf " queen_files: %s\n" "${queen_files[@]}"
 
 wait
 
+# remove multimappers
+samtools view -b -F 256 \
+    -o ${outdir}/worker_merged_unique.bam \
+    ${outdir}/worker_merged.bam &
+samtools view -b -F 256 \
+    -o ${outdir}/larva_merged_unique.bam \
+    ${outdir}/larva_merged.bam &
+samtools view -b -F 256 \
+    -o ${outdir}/queen_merged_unique.bam \
+    ${outdir}/queen_merged.bam &
+
+wait
+
 # index bamfiles
-samtools index "${outdir}/worker_merged.bam" &
-samtools index "${outdir}/larva_merged.bam" &
-samtools index "${outdir}/queen_merged.bam" &
+samtools index "${outdir}/worker_merged_unique.bam" &
+samtools index "${outdir}/larva_merged_unique.bam" &
+samtools index "${outdir}/queen_merged_unique.bam" &
 
 wait
  

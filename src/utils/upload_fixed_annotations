@@ -32,6 +32,11 @@ curl "${curl_path}" \
     -H 'Content-Type: application/json' \
     --data "{\"username\":\"${APOLLO_USERNAME}\", \"password\":\"${APOLLO_PASSWORD}\", \"organism\":\"Test organism\" }" ;
 
+curl "${curl_path}" \
+    -H 'Content-Type: application/json' \
+    --data "{\"username\":\"${APOLLO_USERNAME}\", \"password\":\"${APOLLO_PASSWORD}\", \"organism\":\"Vespula vulgaris\" }" ;
+
+
 # remove failing entries from GFF
 # (r script src/utils/split_problematic_gff_entries.R)
 # RUN INTERACTIVELY TO CATCH ALL IDs
@@ -43,7 +48,7 @@ bin/apollo_source/tools/data/add_features_from_gff3_to_annotations.pl \
     --password "${APOLLO_PASSWORD}" \
     --input "${filtered_annotations}" \
     --use_name_for_feature \
-    --organism "Test organism" \
+    --organism "Vespula vulgaris" \
     --success_log "apollo_annotations/success.log" \
     --error_log "apollo_annotations/errors.log"
 

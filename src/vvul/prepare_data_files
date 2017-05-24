@@ -52,17 +52,17 @@ printf "[ %s: Running flatfile-to-json.pl on tblastn results ]\n" "$(date)"
 
 # load STAR bamfile(s)
 "${PERL}" bin/apollo/add-bam-track.pl \
-    --bam_url "processed_data/vvul/rnaseq/merged/worker_merged.bam" \
+    --bam_url "rnaseq/worker_merged_unique.bam" \
     --label "worker" --key "Worker RNAseq reads" \
     --in "${outdir}/trackList.json"
 
 "${PERL}" bin/apollo/add-bam-track.pl \
-    --bam_url  "processed_data/vvul/rnaseq/merged/larva_merged.bam" \
+    --bam_url  "rnaseq/larva_merged_unique.bam" \
     --label "larva" --key "Larva RNAseq reads" \
     --in "${outdir}/trackList.json"
 
 "${PERL}" bin/apollo/add-bam-track.pl \
-    --bam_url "processed_data/vvul/rnaseq/merged/queen_merged.bam" \
+    --bam_url "rnaseq/queen_merged_unique.bam" \
     --label "queen" --key "Queen RNAseq reads" \
     --in "${outdir}/trackList.json"
 
