@@ -15,12 +15,13 @@ if [[ ! -e "${blatdir}" ]]; then
 fi
 
 # make a blat index
+printf "[ %s: Running faToTwoBit ]\n" "$(date)"
 /usr/local/bin/faToTwoBit "${FASTA}" "${blatdir}/vvmtdna.2bit"
 
 # prepare refseqs
 printf "[ %s: Running prepare-refseqs.pl ]\n" "$(date)"
 "${PERL}" bin/apollo/prepare-refseqs.pl \
-    --fasta "${FASTA_RENAMED}" \
+    --fasta "${FASTA}" \
     --out "${outdir}"
 
 # prepare "gff" (mitos gff looks strange)
