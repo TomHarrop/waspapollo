@@ -37,7 +37,11 @@ printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
 if [[ ! -e "${outdir}/rnaseq" ]]; then
     mkdir -p "${outdir}/rnaseq"
 fi
-ln -s "processed_data/vvul/rnaseq/merged/*" "${outdir}/rnaseq/"
+rnaseq_outdir=$(readlink -f "${outdir}/rnaseq/")
+ln -s  "$(readlink -f processed_data/vvulmtdna/rnaseq/sorted.bam)" \
+    "${rnaseq_outdir}/"
+ln -s  "$(readlink -f processed_data/vvulmtdna/rnaseq/sorted.bam.bai)" \
+    "${rnaseq_outdir}/"
 
 "${PERL}" bin/apollo/add-bam-track.pl \
     --bam_url "rnaseq/sorted.bam" \
