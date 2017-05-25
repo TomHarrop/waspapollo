@@ -41,7 +41,7 @@ ln -s "processed_data/vvul/rnaseq/merged/*" "${outdir}/rnaseq/"
 
 "${PERL}" bin/apollo/add-bam-track.pl \
     --bam_url "rnaseq/sorted.bam" \
-    --label "worker" --key "RNAseq reads" \
+    --label "rnaseq" --key "RNAseq reads" \
     --in "${outdir}/trackList.json"
 
 # generate index
