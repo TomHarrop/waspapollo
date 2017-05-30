@@ -47,7 +47,6 @@ bin/apollo_source/tools/data/add_features_from_gff3_to_annotations.pl \
     --username "${APOLLO_USERNAME}" \
     --password "${APOLLO_PASSWORD}" \
     --input "${filtered_annotations}" \
-    --name_attributes 'Name' \
     --organism "Vespula vulgaris" \
     --success_log "apollo_annotations/success.log" \
     --error_log "apollo_annotations/errors.log"
