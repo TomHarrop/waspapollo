@@ -56,6 +56,15 @@ ln -s  "$(readlink -f raw_data/aswmtdna/mt_mapped.bam.bai)" \
     --type "?,X,Copy#,Gap,Break,TandemRepeat" \
     --out "${outdir}"
 
+# add pilon coverage track
+bw_path="$(readlink -f processed_data/aswmtdna/Scaffold2PhysicalCoverage.bw)"
+ln -s "${bw_path}" "${mapping_outdir}/"
+"${PERL}" bin/apollo/add-bw-track.pl \
+    --bw_url mapping/Scaffold2PhysicalCoverage.bw \
+    --label "coverage" \
+    --key "Pilon physical coverage" \
+    --in "${outdir}/trackList.json"
+
 # generate index
 printf "[ %s: Running generate-names.pl ]\n" "$(date)"
 "${PERL}" bin/apollo/generate-names.pl \
