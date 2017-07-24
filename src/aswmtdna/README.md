@@ -9,4 +9,12 @@ sed "s/^>.*/>Scaffold2/" raw_data/aswmtdna/Scaffold2.fasta \
 
 src/aswmtdna/fix_mitos_bed.R
 
-3. Prepare the apollo files
+3. Fix the Pilon BED file
+
+src/aswmtdna/fix_pilon_bed.R
+
+4. Convert coverage wig to bigwig
+
+src/aswmtdna/convert_pilon_wig_to_bigwig.R
+
+5. Prepare the apollo files

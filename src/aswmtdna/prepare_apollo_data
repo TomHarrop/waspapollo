@@ -50,10 +50,10 @@ ln -s  "$(readlink -f raw_data/aswmtdna/mt_mapped.bam.bai)" \
 
 # add Pilon notes
 "${PERL}" bin/apollo/flatfile-to-json.pl \
-    --bed raw_data/aswmtdna/Scaffold2Pilon.bed \
+    --gff raw_data/aswmtdna/Scaffold2Pilon.bed \
     --trackLabel "pilon" \
     --key "Issues found by Pilon" \
-    --type "?,X,Copy#,Gap,Break,TandemRepeat" \
+    --type "pilon_Q,pilon_X,Copy_no,Gap,Break,TandemRepeat" \
     --out "${outdir}"
 
 # add pilon coverage track
