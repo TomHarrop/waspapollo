@@ -18,7 +18,8 @@ printf "[ %s: Subsampling alignments ]\n" "$(date)"
         -l 9 \
         --output-fmt BAM \
         -o "${sorted_bam}" \
-        --reference "${FASTA}"
+        --reference "${FASTA}" \
+        -
 
 printf "[ %s: Indexing BAMfile ]\n" "$(date)"
 "${samtools}" index "${sorted_bam}"
