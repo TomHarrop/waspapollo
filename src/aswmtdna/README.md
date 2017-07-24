@@ -18,3 +18,6 @@ src/aswmtdna/fix_pilon_bed.R
 src/aswmtdna/convert_pilon_wig_to_bigwig.R
 
 5. Prepare the apollo files
+
+src/aswmtdna/prepare_apollo_data
+
