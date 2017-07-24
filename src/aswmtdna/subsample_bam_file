@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -eu
+
+samtools=bin/samtools/samtools
+
+FASTA="processed_data/aswmtdna/aswmtDNA.fasta"
+bamfile="raw_data/aswmtdna/mt_mapped.bam"
+sorted_bam="processed_data/aswmtdna/mt_mapped.bam"
+
+# subsample the alignments
+printf "[ %s: Subsampling alignments ]\n" "$(date)"
+"${samtools}" view --threads 50 -s 0.01 \
+    "${bamfile}" \
+    | "${samtools}" sort \
+        -@ 50 \
+        -m 5G
+        -l 9 \
+        --output-fmt BAM \
+        -o "${sorted_bam}" \
+        --reference "${FASTA}"
+
+printf "[ %s: Indexing BAMfile ]\n" "$(date)"
+"${samtools}" index "${sorted_bam}"
+
+exit 0

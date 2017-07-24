@@ -13,11 +13,15 @@ src/aswmtdna/fix_mitos_bed.R
 
 src/aswmtdna/fix_pilon_bed.R
 
-4. Convert coverage wig to bigwig
+4. Subsample the BAM file
+
+
+
+5. Convert coverage wig to bigwig
 
 src/aswmtdna/convert_pilon_wig_to_bigwig.R
 
-5. Prepare the apollo files
+6. Prepare the apollo files
 
 src/aswmtdna/prepare_apollo_data
 
