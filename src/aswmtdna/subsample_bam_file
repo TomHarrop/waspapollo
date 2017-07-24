@@ -10,16 +10,15 @@ sorted_bam="processed_data/aswmtdna/mt_mapped.bam"
 
 # subsample the alignments
 printf "[ %s: Subsampling alignments ]\n" "$(date)"
-"${samtools}" view -h --threads 50 -s 0.01 \
+"${samtools}" view \
+    -h -s 0.01 \
     "${bamfile}" \
     | "${samtools}" sort \
         -@ 50 \
-        -m 5G
+        -m 5G \
         -l 9 \
-        --output-fmt BAM \
         -o "${sorted_bam}" \
-        --reference "${FASTA}" \
-        -
+        --reference "${FASTA}"
 
 printf "[ %s: Indexing BAMfile ]\n" "$(date)"
 "${samtools}" index "${sorted_bam}"
