@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+PERL="/usr/bin/perl"
+
+FASTA="processed_data/aswmtdna/aswmtDNA.fasta"
+GFF="processed_data/aswmtdna/mitos_fixed.gff3"
+
+outdir="apollo_data/aswmtna"
+if [[ ! -e "${outdir}" ]]; then
+  mkdir -p "${outdir}"
+fi
+blatdir="${outdir}/blat"
+if [[ ! -e "${blatdir}" ]]; then
+  mkdir -p "${blatdir}"
+fi
+
+# make a blat index
+printf "[ %s: Running faToTwoBit ]\n" "$(date)"
+/usr/local/bin/faToTwoBit "${FASTA}" "${blatdir}/vvmtdna.2bit"
+
+# prepare refseqs
+printf "[ %s: Running prepare-refseqs.pl ]\n" "$(datqe)"
+"${PERL}" bin/apollo/prepare-refseqs.pl \
+    --fasta "${FASTA}" \
+    --out "${outdir}"
+
+# prepare "gff" (mitos gff looks strange)
+printf "[ %s: Running flatfile-to-json.pl on maker annotation ]\n" "$(date)"
+"${PERL}" bin/apollo/flatfile-to-json.pl \
+    --gff "${GFF}" \
+    --trackLabel "mitos" \
+    --key "MITOS annotation" \
+    --type "gene,rRNA,tRNA,rep_origin" \
+    --out "${outdir}"
+
+# add bam file
+if [[ ! -e "${outdir}/mapping" ]]; then
+    mkdir -p "${outdir}/mapping"
+fi
+mapping_outdir=$(readlink -f "${outdir}/mapping/")
+ln -s  "$(readlink -f raw_data/aswmtdna/mt_mapped.bam)" \
+    "${mapping_outdir}/"
+ln -s  "$(readlink -f raw_data/aswmtdna/mt_mapped.bam.bai)" \
+    "${mapping_outdir}/"
+
+"${PERL}" bin/apollo/add-bam-track.pl \
+    --bam_url "mapping/mt_mapped.bam" \
+    --label "reads" --key "gDNA reads" \
+    --in "${outdir}/trackList.json"
+
+# add Pilon notes
+"${PERL}" bin/apollo/flatfile-to-json.pl \
+    --bed raw_data/aswmtdna/Scaffold2Pilon.bed \
+    --trackLabel "pilon" \
+    --key "Issues found by Pilon" \
+    --type "?,X,Copy#,Gap,Break,TandemRepeat" \
+    --out "${outdir}"
+
+# generate index
+printf "[ %s: Running generate-names.pl ]\n" "$(date)"
+"${PERL}" bin/apollo/generate-names.pl \
+    --verbose \
+    --out "${outdir}"
+
+chmod -R a=rwx "${outdir}"
