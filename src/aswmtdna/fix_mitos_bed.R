@@ -4,7 +4,7 @@ library(data.table)
 
 # load the bedfile
 mitos_bed_file = "raw_data/aswmtdna/asw_mtdna_meraculous_pilon.bed"
-mitos_bed <- rtracklayer::import.bed(mitos_gff_file)
+mitos_bed <- rtracklayer::import.bed(mitos_bed_file)
 
 # fix chromosome names
 seqlevels(mitos_bed) <- "Scaffold2"
