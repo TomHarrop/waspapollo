@@ -5,7 +5,7 @@ PERL="/usr/bin/perl"
 FASTA="processed_data/aswmtdna/aswmtDNA.fasta"
 GFF="processed_data/aswmtdna/mitos_fixed.gff3"
 
-outdir="apollo_data/aswmtna"
+outdir="apollo_data/aswmtdna"
 if [[ ! -e "${outdir}" ]]; then
   mkdir -p "${outdir}"
 fi
