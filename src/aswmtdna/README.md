@@ -15,7 +15,8 @@ src/aswmtdna/fix_pilon_bed.R
 
 4. Subsample the BAM file
 
-
+src/aswmtdna/subsample_sr_bam_file
+src/aswmtdna/subsample_lr_bam_file
 
 5. Convert coverage wig to bigwig
 

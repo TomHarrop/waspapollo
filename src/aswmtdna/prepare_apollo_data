@@ -50,9 +50,9 @@ ln -s  "$(readlink -f processed_data/aswmtdna/mt_mapped.bam.bai)" \
     --in "${outdir}/trackList.json"
 
 # lr mt mapping
-ln -s "$(readlink -f raw_data/aswmtdna/lr_mapped.bam)" \
+ln -s "$(readlink -f processed_data/aswmtdna/lr_mapped.bam)" \
     "${mapping_outdir}/"
-ln -s "$(readlink -f raw_data/aswmtdna/lr_mapped.bam.bai)" \
+ln -s "$(readlink -f processed_data/aswmtdna/lr_mapped.bam.bai)" \
     "${mapping_outdir}/"
 "${PERL}" bin/apollo/add-bam-track.pl \
     --bam_url "mapping/lr_mapped.bam" \
