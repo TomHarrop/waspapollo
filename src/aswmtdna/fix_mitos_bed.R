@@ -3,11 +3,11 @@ library(GenomicRanges)
 library(data.table)
 
 # load the bedfile
-mitos_bed_file = "raw_data/aswmtdna/asw_mtdna_meraculous_pilon.bed"
+mitos_bed_file = "raw_data/aswmtdna/asw_mtdna_unicycler_rotated.bed"
 mitos_bed <- rtracklayer::import.bed(mitos_bed_file)
 
 # fix chromosome names
-seqlevels(mitos_bed) <- "Scaffold2"
+#seqlevels(mitos_bed) <- "Scaffold2"
 
 # make a copy of mcols
 mtdna_mcols <- as.data.table(mcols(mitos_bed))

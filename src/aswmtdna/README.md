@@ -2,8 +2,8 @@
 
 1. Fix the FASTA file
 
-sed "s/^>.*/>Scaffold2/" raw_data/aswmtdna/Scaffold2.fasta \
-    > processed_data/aswmtdna/aswmtDNA.fasta
+# sed "s/^>.*/>Scaffold2/" raw_data/aswmtdna/assembly_rotated.fasta \
+#    > processed_data/aswmtdna/aswmtDNA.fasta
 
 2. Fix the mitOS BED file
 

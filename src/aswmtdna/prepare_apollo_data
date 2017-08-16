@@ -2,7 +2,7 @@
 
 PERL="/usr/bin/perl"
 
-FASTA="processed_data/aswmtdna/aswmtDNA.fasta"
+FASTA="raw_data/aswmtdna/assembly_rotated.fasta"
 GFF="processed_data/aswmtdna/mitos_fixed.gff3"
 
 outdir="apollo_data/aswmtdna"
